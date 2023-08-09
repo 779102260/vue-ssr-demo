@@ -1,5 +1,7 @@
-import {createRouter, createWebHistory, createWebHashHistory} from 'vue-router'
+import Router from 'vue-router'
+import Vue from "vue";
 
+Vue.use(Router)
 
 // TODO 代码分割支持的原理(router?)
 const routes = [
@@ -11,16 +13,16 @@ const routes = [
 // 服务端避免单例
 export default function () {
 
-  const router = createRouter({
-    history: createWebHashHistory(),
+  const router = new Router({
+    mode: 'history',
     routes,
   })
 
-  router.beforeEach((to, from) => {
-    // ...
-    // 返回 false 以取消导航
-    console.log(to)
-  })
+  // router.beforeEach((to, from) => {
+  //   // ...
+  //   // 返回 false 以取消导航
+  //   console.log(to)
+  // })
 
 
   return router

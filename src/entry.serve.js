@@ -1,11 +1,12 @@
-const createApp = require('./createApp')
+import createApp from "./createApp";
+
 
 // 避免单例：
 // - 返回一个创建vue实例的工厂函数：单个vue实例，在被多个用户请求重复使用，造成共享很糟糕，比如登录状态
 // - router
 // - vuex
 // 避免副作用
-function createServerApp(context) {
+export default function createServerApp(context) {
 
     const {app, router, store} = createApp()
 
@@ -35,5 +36,3 @@ function createServerApp(context) {
     })
 
 }
-
-module.exports = createServerApp

@@ -28,6 +28,7 @@ router.onReady(() => {
 
         // 预取数据
         await Promise.all(activated.map(c => {
+            console.log(22222, c)
             return c.asyncData && c.asyncData({store, route: to})
         }))
 

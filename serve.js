@@ -1,7 +1,6 @@
 
 const server = require('express')()
-// const {createRenderer, createBundleRenderer} = require('vue-server-renderer')
-const {createBundleRenderer} = require('@vue/server-renderer')
+const {createBundleRenderer} = require('vue-server-renderer')
 
 const template = require('fs').readFileSync('./template.html', 'utf-8')
 // 创建一个 renderer，支持模板
@@ -20,12 +19,11 @@ const renderer = createBundleRenderer(bundle, {
     // this is only needed when vue-server-renderer is npm-linked
     // basedir: resolve('./dist'),
     // recommended for performance
-    runInNewContext: false,
+    runInNewContext: true,
     template,
-    manifest
+    // 用于预加载
+    clientManifest: manifest
 })
-
-const createApp = require('../src/serve.entry.js')
 
 server.get('*', (req, res) => {
     // 第 1 步：创建一个 Vue 实例
@@ -37,8 +35,10 @@ server.get('*', (req, res) => {
     // - 平台特性API无法使用：window、document等（可以在浏览器挂载后使用）
     // - 自定义指令：操作dom无法使用 https://vue2-ssr-docs.vercel.app/zh/guide/universal.html#%E8%87%AA%E5%AE%9A%E4%B9%89%E6%8C%87%E4%BB%A4
 
-    const context = {url: req.url}
-    const app = createApp(context)
+    const context = {
+        url: req.url,
+        title: 'hello page'
+    }
     
     // 第 2 步：将 Vue 实例渲染为 HTML
     // - 支持插值
@@ -47,18 +47,11 @@ server.get('*', (req, res) => {
     // - 在嵌入 Vuex 状态进行客户端融合(client-side hydration)时，自动注入以及 XSS 防御。
 
     
-    renderer.renderToString(app, {
-        title: 'hello page'
-    }).then(html => {
-        setRes(html)
+    renderer.renderToString(context).then(html => {
+        res.end(html)
     }).catch(err => {
         console.error(err)
     })
-
-    // 返回
-    function setRes(html) {
-        res.end(html)
-    }
 })
 
-server.listen(8080)
+server.listen(8082)
