@@ -1,1 +1,1 @@
-vue2.7 ssr demo
+vue3 ssr demo
