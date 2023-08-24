@@ -21,7 +21,7 @@ const renderer = createBundleRenderer(bundle, {
     // recommended for performance
     runInNewContext: true,
     template,
-    // 用于预加载
+    // 用于在template引入资源（下载和预加载）
     clientManifest: manifest
 })
 
@@ -34,6 +34,10 @@ server.get('*', (req, res) => {
     //      - 注意避免副作用：比如在beforeCreate和created中使用定时器，在node中创建后无法在destroyed销毁
     // - 平台特性API无法使用：window、document等（可以在浏览器挂载后使用）
     // - 自定义指令：操作dom无法使用 https://vue2-ssr-docs.vercel.app/zh/guide/universal.html#%E8%87%AA%E5%AE%9A%E4%B9%89%E6%8C%87%E4%BB%A4
+
+    if (req.url.includes('.')) {
+        return
+    }
 
     const context = {
         url: req.url,
@@ -55,3 +59,5 @@ server.get('*', (req, res) => {
 })
 
 server.listen(8082)
+
+console.log('server is running at', `http://localhost:8082`)

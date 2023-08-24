@@ -8,15 +8,20 @@ import createApp from "./createApp";
 // 避免副作用
 export default function createServerApp(context) {
 
+    console.log('createServerApp')
+    debugger
+
     const {app, router, store} = createApp()
 
     // 因为路由导致异步，加个promise
     return new Promise((resolve, reject) => {
         // 在服务端设置router，注意这里需要保障server路由和router一致
         router.push(context.url)
+        console.log('url', context.ur)
         // 等到 router 将可能的异步组件和钩子函数解析完
         router.onReady(() => {
             const matchedComponents = router.getMatchedComponents()
+            console.log('matchedComponents', context.url, matchedComponents)
             if (!matchedComponents.length) {
                 return reject({ code: 404 })
             }
@@ -25,6 +30,7 @@ export default function createServerApp(context) {
                 if (!cpn.asynData) {
                     return
                 }
+                console.log('cpn.asynData', cpn.asynData)
                 return cpn.asynData({store, route: router.currentRoute})
             })).then(() => {
                 // 当使用 template 时，context.state 将作为 window.__INITIAL_STATE__ 状态，自动嵌入到最终的 HTML 中。

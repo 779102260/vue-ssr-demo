@@ -1,11 +1,19 @@
-<template><div>HOME</div></template>
+<template>
+    <div>
+        HOME
+        <p>{{ user.name }}</p>
+    </div>
+</template>
 <script setup>
-import { defineOptions, defineProps } from "vue";
+import { computed, getCurrentInstance } from "vue";
 
 const props = defineProps({
     msg: String
 })
-console.log(1111, props.msg)
+
+const vm = getCurrentInstance()
+const store = vm.proxy.$store
+const user = computed(() => store.state.user)
 
 
 </script>

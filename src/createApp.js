@@ -11,7 +11,7 @@ export default function () {
   const router = createRouter()
   const store = createStore()
 
-  // 同步路由状态(route state)到 store
+  // 同步路由状态：存储route state到store，csr时再次执行时还原
   sync(store, router)
 
   const app = new Vue({
