@@ -1,24 +1,17 @@
 
+const fs = require('fs')
 const server = require('express')()
 const {createBundleRenderer} = require('vue-server-renderer')
 
-const template = require('fs').readFileSync('./template.html', 'utf-8')
-// 创建一个 renderer，支持模板
-// const renderer = createRenderer({
-//     template
-// })
+const template = fs.readFileSync('./template.html', 'utf-8')
 const bundle = require('./dist/vue-ssr-server-bundle.json')
 const manifest = require('./dist/vue-ssr-client-manifest.json')
 const renderer = createBundleRenderer(bundle, {
-    // TODO
-    // for component caching
+    // 缓存
     // cache: LRU({
     //     max: 1000,
     //     maxAge: 1000 * 60 * 15
     // }),
-    // this is only needed when vue-server-renderer is npm-linked
-    // basedir: resolve('./dist'),
-    // recommended for performance
     runInNewContext: true,
     template,
     // 用于在template引入资源（下载和预加载）
@@ -35,8 +28,19 @@ server.get('*', (req, res) => {
     // - 平台特性API无法使用：window、document等（可以在浏览器挂载后使用）
     // - 自定义指令：操作dom无法使用 https://vue2-ssr-docs.vercel.app/zh/guide/universal.html#%E8%87%AA%E5%AE%9A%E4%B9%89%E6%8C%87%E4%BB%A4
 
-    if (req.url.includes('.')) {
+    console.log('req.url', req.url)
+
+    // 请求静态资源
+    // TODO 常见的做法是express.static
+    // TODO 常见的做法是静态资源放到cdn，使用template
+    if (req.url.startsWith('/auto')) {
+        const path = req.url.replace('/auto', '')
+        const content =  fs.readFileSync(`./dist${path}`)
+        res.end(content)
         return
+    }
+    if (req.url === '/favicon.ico') {
+        return res.end('')
     }
 
     const context = {

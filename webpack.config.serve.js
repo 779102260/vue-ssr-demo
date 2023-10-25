@@ -25,6 +25,8 @@ module.exports = merge(baseConfig, {
     // 外置化应用程序依赖模块。可以使服务器构建速度更快，
     // 并生成较小的 bundle 文件。
     externalsPresets: { node: true }, // in order to ignore built-in modules like path, fs, etc.
+    // nodeExternals不打包node_modules，这样的话需要在服务端安装所有依赖，所以风险较大，非next这样一体化框架不建议
+    // 建议删掉这里，bunlde体积大，但只是首次请求花时间
     externals: nodeExternals({
         // 不要外置化 webpack 需要处理的依赖模块。
         // 你可以在这里添加更多的文件类型。例如，未处理 *.vue 原始文件，
@@ -35,6 +37,7 @@ module.exports = merge(baseConfig, {
     // 这是将服务器的整个输出
     // 构建为单个 JSON 文件的插件。
     // 默认文件名为 `vue-ssr-server-bundle.json`
+    // TODO 原理
     plugins: [
         new VueSSRServerPlugin()
     ]
