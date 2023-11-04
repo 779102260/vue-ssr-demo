@@ -8,7 +8,6 @@
     </div>
 </template>
 <script setup>
-import { computed, getCurrentInstance, onMounted } from "vue";
 import { useUserStore, useCounterStore } from "../createPinia";
 
 const props = defineProps({
@@ -19,12 +18,10 @@ const userStore = useUserStore()
 const countStore = useCounterStore()
 
 function onAddClick() {
-    // store.commit('setCount', count.value + 1)
     countStore.setCount(countStore.count + 1)
 }
 
 function onSubClick() {
-    // store.commit('setCount', count.value  -1)
     countStore.setCount(countStore.count  -1)
 }   
 
@@ -35,7 +32,6 @@ export default {
     // 自定义，代替serverPrefetch 更灵活些
     async asyncData({pinia, route}) {
         // 触发 action 后，会返回 Promise
-        // return store.dispatch('fetchUser')
         console.log('asyncData')
         const userStore = useUserStore(pinia)
         await userStore.setUser()
