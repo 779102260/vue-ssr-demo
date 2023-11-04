@@ -8,7 +8,7 @@ import createApp from "./createApp";
 // 避免副作用
 export default function createServerApp(context) {
 
-    const {app, router, store} = createApp()
+    const {app, router, pinia} = createApp()
 
     // 因为路由导致异步，加个promise
     return new Promise((resolve, reject) => {
@@ -25,10 +25,10 @@ export default function createServerApp(context) {
                 if (!cpn.asyncData) {
                     return
                 }
-                return cpn.asyncData({store, route: router.currentRoute})
+                return cpn.asyncData({pinia, route: router.currentRoute})
             })).then(() => {
                 // 当使用 template 时，context.state 将作为 window.__INITIAL_STATE__ 状态，自动嵌入到最终的 HTML 中。
-                context.state = store.state
+                context.state = pinia.state
                 // 完成app创建
                 resolve(app)
             })

@@ -1,39 +1,45 @@
 <template>
     <div>
         HOME<span>~</span>BIG
-        <p>{{ user.name }}</p>
-        <p>{{ count  }}</p>
+        <p>{{ userStore.user.name }}</p>
+        <p>{{ countStore.count  }}</p>
         <button @click="onAddClick">+</button>
         <button @click="onSubClick">-</button>
     </div>
 </template>
 <script setup>
 import { computed, getCurrentInstance, onMounted } from "vue";
+import { useUserStore, useCounterStore } from "../createPinia";
 
 const props = defineProps({
     msg: String
 })
 
-const vm = getCurrentInstance()
-const store = vm.proxy.$store
-const user = computed(() => store.state.user)
-const count = computed(() => store.state.count)
+const userStore = useUserStore()
+const countStore = useCounterStore()
 
 function onAddClick() {
-    store.commit('setCount', count.value + 1)
+    // store.commit('setCount', count.value + 1)
+    countStore.setCount(countStore.count + 1)
 }
 
 function onSubClick() {
-    store.commit('setCount', count.value  -1)
+    // store.commit('setCount', count.value  -1)
+    countStore.setCount(countStore.count  -1)
 }   
 
 </script>
 <script>
+import { useUserStore } from "../createPinia";
 export default {
     // 自定义，代替serverPrefetch 更灵活些
-    asyncData({store, route}) {
+    async asyncData({pinia, route}) {
         // 触发 action 后，会返回 Promise
-        return store.dispatch('fetchUser')
+        // return store.dispatch('fetchUser')
+        console.log('asyncData')
+        const userStore = useUserStore(pinia)
+        await userStore.setUser()
+        return {}
     },
     // vue ssr内部调用
     // serverPrefetch(vm) {
