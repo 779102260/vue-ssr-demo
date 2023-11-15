@@ -3,8 +3,10 @@
         HOME<span>~</span>BIG
         <p>{{ userStore.user.name }}</p>
         <p>{{ countStore.count  }}</p>
+        <p>test2: {{ myCounterStore.count }}</p>
         <button @click="onAddClick">+</button>
         <button @click="onSubClick">-</button>
+
     </div>
 </template>
 <script setup>
@@ -22,7 +24,7 @@ function onAddClick() {
 }
 
 function onSubClick() {
-    countStore.setCount(countStore.count  -1)
+    countStore.setCount(countStore.count - 1)
 }   
 
 </script>

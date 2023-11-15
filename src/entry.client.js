@@ -5,7 +5,7 @@ const {app, pinia, router} = createApp()
 
 // 获取ssr注入的状态，作为store的初始状态
 if (window.__INITIAL_STATE__) {
-    console.log('[CSR] sync store to router', window.__INITIAL_STATE__)
+    console.log('[CSR] set initial state', window.__INITIAL_STATE__)
     pinia.state.value = window.__INITIAL_STATE__
 }
 
